@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../model/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Post } from "../model/post.model.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -91,6 +92,19 @@ const login = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
+  const populatedPosts = await Promise.all(
+    user.posts.map(async (postId) => {
+      const post = await Post.findById(postId);
+      if (post && post.author.equals(user._id)) {
+        return post;
+      }
+      return null;
+    })
+  );
+  
+  
+  console.log(populatedPosts);
+
   const loggedInUser = await User.findOne(user._id).select(
     "-password -refreshToken"
   );

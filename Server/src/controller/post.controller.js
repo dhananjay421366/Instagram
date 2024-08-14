@@ -6,6 +6,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../model/post.model.js";
 import { Comment } from "../model/comment.model.js";
 
+// done
 const addNewPost = asyncHandler(async (req, res) => {
   const { caption } = req.body;
   const image = req.files?.image[0]?.path;
@@ -26,6 +27,7 @@ const addNewPost = asyncHandler(async (req, res) => {
   const user = await User.findById(authorId);
   if (user) {
     user.posts.push(post._id);
+    console.log(post);
     await user.save();
   }
   await post.populate({ path: "author", select: "-password -refreshToken" }); // select an author and jump on author go on User model and select user details
