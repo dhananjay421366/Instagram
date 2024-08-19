@@ -42,16 +42,9 @@ const register = asyncHandler(async (req, res) => {
   console.log(req.files);
   const profileFile = req.files?.profilePicture[0]?.path;
   console.log(profileFile);
-  if (!profileFile) {
-    throw new ApiError(400, "profile file is required");
-  }
 
   // upload them cloudinary
   const profileImg = await uploadOnCloudinary(profileFile);
-
-  if (!profileImg) {
-    throw new ApiError(400, "profile  file is required");
-  }
 
   const user = await User.create({
     username,
@@ -78,7 +71,7 @@ const login = asyncHandler(async (req, res) => {
   if (!username && !email) {
     throw new ApiError(400, "username or email is required");
   }
-  const user = await User.findOne({
+  let user = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -101,9 +94,6 @@ const login = asyncHandler(async (req, res) => {
       return null;
     })
   );
-  
-  
-  console.log(populatedPosts);
 
   const loggedInUser = await User.findOne(user._id).select(
     "-password -refreshToken"
@@ -111,6 +101,16 @@ const login = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
+  };
+  user = {
+    _id: user._id,
+    username: user.username,
+    email: user.email,
+    profilePicture: user.profilePicture,
+    Bio: user.Bio,
+    followers: user.followers,
+    following: user.following,
+    posts: populatedPosts,
   };
   return res
     .status(200)
@@ -120,7 +120,7 @@ const login = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-          user: loggedInUser,
+          user: user,
           accessToken,
           refreshToken,
         },
@@ -250,11 +250,6 @@ const followOrUnfollow = asyncHandler(async (req, res) => {
 
   // Check if the current user is already following the target user
   const isFollowing = currentUser.following.includes(targetUser._id);
-
-  // Start a database session and transaction to ensure atomicity
-  const session = await User.startSession();
-  session.startTransaction();
-
   try {
     if (isFollowing) {
       // Unfollow logic: remove the target user from the current user's following list
@@ -262,16 +257,13 @@ const followOrUnfollow = asyncHandler(async (req, res) => {
       await Promise.all([
         User.updateOne(
           { _id: currentUserId },
-          { $pull: { following: targetUserId } },
-          { session }
+          { $pull: { following: targetUserId } }
         ),
         User.updateOne(
           { _id: targetUserId },
-          { $pull: { followers: currentUserId } },
-          { session }
+          { $pull: { followers: currentUserId } }
         ),
       ]);
-      await session.commitTransaction();
       return res
         .status(200)
         .json(new ApiResponse(200, {}, "Unfollowed successfully"));
@@ -281,16 +273,13 @@ const followOrUnfollow = asyncHandler(async (req, res) => {
       await Promise.all([
         User.updateOne(
           { _id: currentUserId },
-          { $push: { following: targetUserId } },
-          { session }
+          { $push: { following: targetUserId } }
         ),
         User.updateOne(
           { _id: targetUserId },
-          { $push: { followers: currentUserId } },
-          { session }
+          { $push: { followers: currentUserId } }
         ),
       ]);
-      await session.commitTransaction();
       return res
         .status(200)
         .json(new ApiResponse(200, {}, "Followed successfully"));
