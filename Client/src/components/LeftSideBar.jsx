@@ -428,7 +428,7 @@ import {
   Search,
   TrendingUp,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
 import axios from "axios";
@@ -466,6 +466,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/AuthSlice";
+import { CreatePost } from "./CreatePost";
 
 
 
@@ -474,6 +475,7 @@ export const LeftSideBar = () => {
   const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch()
+  const [open, setOpen] = useState(false)
   const logoutHandle = async () => {
     try {
       const response = await axios.get("/api/v1/users/logout", {
@@ -490,13 +492,17 @@ export const LeftSideBar = () => {
       navigate("/login");
     }
   };
+
   const sideBarHandler = (textType) => {
     if (textType === "Logout") {
       logoutHandle();
-    } else if (textType == "Creaet"){
-      
+    } else if (textType == "Create") {
+      setOpen(true)
     }
   };
+  let username = `${user?.data.user.username}`
+ // username only contain 10 letters
+let completedUsername = username.slice(0, 21);
   const sidebarItems = [
     {
       icon: <Home />,
@@ -520,7 +526,7 @@ export const LeftSideBar = () => {
     },
     {
       icon: <PlusSquare />,
-      text: "Creaet",
+      text: "Create",
     },
     {
       icon: (
@@ -531,12 +537,12 @@ export const LeftSideBar = () => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ),
-      text: user ? `${user?.data.user.username}` : "Profile",
+      text: user ? `${completedUsername}` : "Profile",
     },
   ];
   return (
     <>
-      <div className="md:flex w-full px-6 p-8 hidden ">
+      <div className="md:flex w-full px-6 p-8 hidden text-black ">
         <div class="x2lah0s x1to3lk4 x1n2onr6  xh8yej3">
           <div class="x9f619 hidden md:flex fixed  x1r3wxaz x9tmck8 xn6708d x1l90r2v x1ye3gou xh8yej3 xxz18i5 x10l6tqk x17qophe x13vifvy">
             <div className="opacity: 0.270306;">
@@ -637,7 +643,7 @@ export const LeftSideBar = () => {
                   className="flex items-center gap-3  relative  hover:bg-gray-900 cursor-pointer rounded-lg p-3 my-3 "
                 >
                   {item.icon}
-                  <span className="hidden md:flex"> {item.text}</span>
+                  <span className="hidden md:flex "> {item.text}</span>
                 </div>
               );
             })}
@@ -771,6 +777,7 @@ export const LeftSideBar = () => {
             </div>
           </div>
         </div>
+        <CreatePost open={open} setOpen={setOpen} />
       </div>
     </>
   );
