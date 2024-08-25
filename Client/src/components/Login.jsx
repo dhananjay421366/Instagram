@@ -7,6 +7,9 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { Link, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import { setAuthUser } from '@/redux/AuthSlice'
+
 
 export const Login = () => {
     const [form, setFormData] = useState({
@@ -15,6 +18,7 @@ export const Login = () => {
     })
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const HandleSubmit = async (e) => {
         e.preventDefault()
         console.log(form);
@@ -28,24 +32,26 @@ export const Login = () => {
                 withCredentials: true
             })
             if (res.data.success) {
+                dispatch(setAuthUser(res.data))
                 navigate("/home")
                 toast.success(res.data.message)
+
 
 
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.message);
+            toast.error(error.res.date.message);
         } finally {
             setLoading(false);
             setFormData({
-                username: "",
                 email: "",
                 password: "",
             });
         }
     }
     return (
+
         <div className="flex items-center w-screen h-screen justify-center">
             <form action="" className='shadow-lg shadow-white flex flex-col gap-5 p-8'>
                 <div className=''>

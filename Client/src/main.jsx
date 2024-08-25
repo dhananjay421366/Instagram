@@ -8,6 +8,11 @@ import { Login } from './components/Login.jsx'
 import { Home } from './pages/Home.jsx'
 import { Toaster } from 'sonner'
 import { Layout } from './components/Layout.jsx'
+import { Provider } from 'react-redux'
+import store from './redux/store.js'
+import { PersistGate } from "redux-persist/integration/react";
+import persistStore from 'redux-persist/es/persistStore'
+
 // const router = createBrowserRouter(
 //   createRoutesFromElements(
 //     <Route path="/" element={<Layout />}>
@@ -19,11 +24,20 @@ import { Layout } from './components/Layout.jsx'
 //     </Route>
 //   )
 // );
+let persistor = persistStore(store)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* <RouterProvider router={router} /> */}
-    <App />
-    <Toaster />
+    <Provider store={store}>
+      <PersistGate  loading={null} persistor={persistor}>
+        {/* <RouterProvider router={router} /> */}
+        <App />
+        <Toaster />
+      </PersistGate>
+
+    </Provider>
+
+
+
   </StrictMode>,
 )

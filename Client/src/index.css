@@ -1,4 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body{
+    background-color: black;
+     color: white;
+}
+.threads{
+    position: inherit;
+}
+.planeBorder{
+    border-right: 1px solid black;
+}
   
