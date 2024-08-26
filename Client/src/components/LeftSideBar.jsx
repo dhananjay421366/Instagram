@@ -502,7 +502,7 @@ export const LeftSideBar = () => {
   };
   let username = `${user?.data.user.username}`
  // username only contain 10 letters
-let completedUsername = username.slice(0, 21);
+let completedUsername = username.slice(0, 10);
   const sidebarItems = [
     {
       icon: <Home />,
@@ -643,7 +643,7 @@ let completedUsername = username.slice(0, 21);
                   className="flex items-center gap-3  relative  hover:bg-gray-900 cursor-pointer rounded-lg p-3 my-3 "
                 >
                   {item.icon}
-                  <span className="hidden md:flex "> {item.text}</span>
+                  <span className="hidden md:flex"> {item.text}</span>
                 </div>
               );
             })}

@@ -1,20 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Button } from './components/ui/button'
+
 import { Signup } from './components/Signup'
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, useNavigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { Login } from './components/Login'
 import { Home } from './pages/Home'
+import { useSelector } from 'react-redux'
+import ProtectedRoute from './components/protectedRoutes'
+import { CreatePost } from './components/CreatePost'
+
 function App() {
+
+  const { user } = useSelector((store) => store.auth);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />} >
-        <Route path="/signup" element={<Signup />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/home' element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        {/* Protected routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addpost"
+          element={
+            <ProtectedRoute>
+            </ProtectedRoute>
+          }
+        />
 
       </Route>
     )

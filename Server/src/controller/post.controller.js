@@ -39,11 +39,11 @@ const addNewPost = asyncHandler(async (req, res) => {
 const getAllPost = asyncHandler(async (req, res) => {
   const post = await Post.find()
     .sort({ createdAt: -1 })
-    .populate({ path: "author", select: "username, profilePicture" })
+    .populate({ path: "author", select: "username  profilePicture" })
     .populate({
       path: "comments",
       sort: { createdAt: -1 },
-      populate: { path: "commentBy", select: "username,profilePicture" },
+      populate: { path: "commentBy", select: "username profilePicture" },
     });
   return res
     .status(200)

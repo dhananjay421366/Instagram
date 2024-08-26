@@ -7,12 +7,14 @@ import { readFileAsDataURI } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 export const CreatePost = ({ open, setOpen }) => {
   const [file, setFile] = useState("")
   const [caption, setCaption] = useState("");
   const [imagePriview, setImagePreview] = useState("")
   const [loading, setLoading] = useState(false)
+
 
   const imageRef = useRef();
   const fileChangeHandler = async (e) => {
@@ -42,6 +44,9 @@ export const CreatePost = ({ open, setOpen }) => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+    
+       
+
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");

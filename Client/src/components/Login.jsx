@@ -41,7 +41,7 @@ export const Login = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.res.date.message);
+            toast.error(error.res.data.message);
         } finally {
             setLoading(false);
             setFormData({

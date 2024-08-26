@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { Badge } from './ui/badge'
 import { CommentDialog } from './commentDialog'
 
-export const Post = () => {
+export const Post = ({ post }) => {
   const [text, setText] = useState("")
   const [open, setOpen] = useState(false)
   const changeEventHandler = (e) => {
@@ -20,6 +20,8 @@ export const Post = () => {
     } else {
       setText("");
     }
+
+    console.log("this post", post);
 
 
   }
@@ -33,7 +35,7 @@ export const Post = () => {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className='flex items-center gap-3'>
-              <h1>Nimbalkar dhananjay </h1>
+              <h1>{post.author.username}</h1>
               <Badge variant="secondary">Author</Badge>
             </div>
           </div>
@@ -51,7 +53,7 @@ export const Post = () => {
         </div>
         <img
           className='rounded-sm my-2 w-full aspect-square object-cover'
-          src='https://imgs.search.brave.com/ETrIOEwnI_3XQTFIjnn3mEciCtHwVcGbp5uJZUnkL7w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2F2ZS1mcmVlLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvMjAy/MC8xMS9jcm9wcGVk/LUlOU1RBLTIuanBn'
+          src={post.image}
           alt="post_img"
         />
 
@@ -70,7 +72,7 @@ export const Post = () => {
         <span className='font-medium block mb-2'>200 likes</span>
         <p>
           <span className='font-medium mr-2'>dhanu1232</span>
-          caption is waiting
+          {post.caption}
         </p>
         <span onClick={() => setOpen(true)} className='cursor-pointer text-sm text-gray-400'>View all  comments</span>
         <CommentDialog open={open} setOpen={setOpen} />
