@@ -17,10 +17,10 @@ export const Signup = () => {
     const navigate = useNavigate()
     const HandleSubmit = async (e) => {
         e.preventDefault();
-        console.log(form);
+        // console.log(form);
         try {
             setLoading(true);
-            console.log(form);
+            // console.log(form);
             const res = await axios.post("/api/v1/users/register", form, {
                 Headers: {
                     "Content-Type": "application/json",

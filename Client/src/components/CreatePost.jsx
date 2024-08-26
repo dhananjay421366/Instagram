@@ -8,12 +8,19 @@ import { Loader2 } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPost } from '@/redux/postSlice'
 
 export const CreatePost = ({ open, setOpen }) => {
   const [file, setFile] = useState("")
   const [caption, setCaption] = useState("");
   const [imagePriview, setImagePreview] = useState("")
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const { user } = useSelector((store) => store.auth)
+  const { posts } = useSelector((store) => store.post)
+  console.log(user);
+  console.log(posts);
 
 
   const imageRef = useRef();
@@ -44,8 +51,10 @@ export const CreatePost = ({ open, setOpen }) => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-    
-       
+        // dispatch(setPost({}))
+
+
+
 
       }
     } catch (error) {
@@ -65,12 +74,12 @@ export const CreatePost = ({ open, setOpen }) => {
             <div className='text-black'><DialogHeader className="text-black text-center font-semibold" >Create New Post</DialogHeader></div>
             <div className='flex gap-3 items-center '>
               <Avatar>
-                <AvatarImage src="" alt="img" />
+                <AvatarImage src={user?.data.user.profilePicture} alt="img" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="">
-                <h1 className='font-semibold  text-xs'>Username</h1>
-                <span className='font-semibold text-gray-600  text-xs'>Bio here...</span>
+                <h1 className='font-semibold  text-xs'>{user?.data.user.username}</h1>
+                <span className='font-semibold text-gray-600  text-xs'>{user?.data.user.Bio}</span>
               </div>
             </div>
             <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} className="focus-visible:ring-transparent border-none" placeholder="Write a caption..." />
