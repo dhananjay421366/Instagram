@@ -19,8 +19,9 @@ export const CreatePost = ({ open, setOpen }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((store) => store.auth)
   const { posts } = useSelector((store) => store.post)
+
+
   console.log(user);
-  console.log(posts);
 
 
   const imageRef = useRef();
@@ -51,12 +52,11 @@ export const CreatePost = ({ open, setOpen }) => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-        // dispatch(setPost({}))
-
-
-
+        setOpen(false);
+        dispatch(setPost([...posts, response.data.data]))
 
       }
+      console.log("display data on screen", response.data.data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
       console.error(error);
