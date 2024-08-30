@@ -19,9 +19,12 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSelector } from 'react-redux'
+import { Comment } from './Comment'
 
 export const CommentDialog = ({ open, setOpen }) => {
     const [text, setText] = useState("")
+    const { selectedPost } = useSelector((store) => store.post)
     const changeEventHandler = (e) => {
         const inputText = e.target.value;
         if (inputText.trim()) {
@@ -40,14 +43,14 @@ export const CommentDialog = ({ open, setOpen }) => {
                 <DialogContent onInteractOutside={() => setOpen(false)} className="max-w-5xl p-0 flex flex-col">
                     <div className="flex flex-1">
                         <div className='w-1/2'>
-                            <img className='w-full h-full object-cover rounded-l-lg' src="https://imgs.search.brave.com/uavTzI0Tq3fujTy7_WjgT7i7Id9rCXBwfxnljO2xtmM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA1LzQyLzk4Lzc2/LzM2MF9GXzU0Mjk4/NzY3Nl84clEzVWlj/akUyYkR0dUpRS25w/d0k0SkM5aUIwamZB/Ry5qcGc" alt="instagram image" />
+                            <img className='w-full h-full object-cover rounded-l-lg' src={selectedPost?.image} />
                         </div>
                         <div className="w-1/2  flex flex-col justify-between text-black">
                             <div className="flex items-center justify-between p-4">
                                 <div className="flex gap-3 items-center">
                                     <Link>
                                         <Avatar>
-                                            <AvatarImage src="" />
+                                            <AvatarImage src={selectedPost?.author.profilePicture} />
                                             <AvatarFallback>
                                                 CN
                                             </AvatarFallback>
@@ -56,10 +59,10 @@ export const CommentDialog = ({ open, setOpen }) => {
                                     </Link>
                                     <div>
                                         <Link className='font-semibold text-sm '>
-                                            Username
+                                            {selectedPost?.author.username}
                                         </Link>
 
-                                        <span className='text-gray-600 '>Bio</span>
+                                        <span className='text-gray-600 '></span>
                                     </div>
                                 </div>
                                 <Dialog>
@@ -85,8 +88,9 @@ export const CommentDialog = ({ open, setOpen }) => {
                             <hr />
                             <div className="flex-1  overflow-y-auto max-h-96 p-4">
                                 {/* All comments */}
-                                All comments
-
+                                {
+                                    selectedPost?.comments.map((comment) => <Comment key={comment._id} comment={comment} />)
+                                }
                             </div>
                             <div className="p-4 ">
                                 <div className="flex items-center gap-2">

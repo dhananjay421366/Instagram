@@ -7,6 +7,7 @@ import { Home } from './pages/Home'
 import { useSelector } from 'react-redux'
 import ProtectedRoute from './components/protectedRoutes'
 import { CreatePost } from './components/CreatePost'
+import { NoLoginUser } from './components/NoLoginUser'
 
 function App() {
 
@@ -32,7 +33,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Route>
     )
   )

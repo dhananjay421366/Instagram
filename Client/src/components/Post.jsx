@@ -11,14 +11,16 @@ import { Badge } from './ui/badge'
 import { CommentDialog } from './commentDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { deletePost, setPost } from '@/redux/postSlice'
+import {  selectedPost, setPost } from '@/redux/postSlice'
 
 
 export const Post = ({ post }) => {
   const [content, setText] = useState("")
   const [open, setOpen] = useState(false)
-  const { user } = useSelector((store) => store.auth);
+
   const { posts } = useSelector((store) => store.post)
+  const { user } = useSelector((store) => store.auth)
+  
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [liked, setLiked] = useState(post.likes.includes(user?.data.user._id) || false)
@@ -143,7 +145,11 @@ export const Post = ({ post }) => {
             }
 
 
-            <MessageCircle onClick={() => setOpen(true)} className='cursor-pointer hover:text-gray-600' />
+            <MessageCircle onClick={() => {
+              dispatch(selectedPost(post));
+              setOpen(true);
+
+            }} className='cursor-pointer hover:text-gray-600' />
             <Send className='cursor-pointer hover:text-gray-600' />
           </div>
           <Bookmark className='cursor-pointer hover:text-gray-600' />
@@ -157,8 +163,12 @@ export const Post = ({ post }) => {
           </span>
           {post.caption.slice(0, 15)}
         </p>
-        <span onClick={() => setOpen(true)} className='cursor-pointer text-sm text-gray-400'>View all {comments.length}  comments</span>
-        <CommentDialog open={open} setOpen={setOpen} />
+        <span onClick={() => {
+              dispatch(selectedPost(post));
+              setOpen(true);
+
+            }} className='cursor-pointer text-sm text-gray-400'>View all {comments.length}  comments</span>
+        <CommentDialog  open={open} setOpen={setOpen} />
 
         <div className='flex items-center justify-between'>
           <input

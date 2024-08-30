@@ -52,7 +52,32 @@ export const Login = () => {
     }
     return (
 
-        <div className="flex items-center w-screen h-screen justify-center">
+        <div className="md:flex items-center p-12 ml-2 w-screen h-screen gap-4 justify-center">
+            <div class="xamitd3 xm2v1qs object-cover  hidden md:flex x322q5f xx54hvc x1vk3w4 xuyhj88 xod5an3 x1gja9t xcd7kps xkxfa8k">
+                <div class="x1qjc9v5 x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x78zum5 xdt5ytf x2lah0s xk390pu x18mmtl5 x1rcfgkt xexx8yu x4uap5 x18d9i69 xkhd6sd x1n2onr6 x11njtxf">
+                    <img
+                        alt=""
+                        class="x972fbf xcfux6l x1qhh985 xm0m39n xk390pu xns55qn xu96u03 xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x10l6tqk x13vifvy x11njtxf xqyf9gi xg01cxk x1rkc77x x19991ni x9lcvmn xnpuxes"
+                        src="/public/loginpageImages.jpg"
+                    />
+                    <img
+                        alt=""
+                        class="x972fbf xcfux6l x1qhh985 xm0m39n xk390pu xns55qn xu96u03 xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x10l6tqk x13vifvy x11njtxf xqyf9gi x1hc1fzr x1rkc77x x19991ni x1lizcpb xnpuxes xhtitgo"
+                        src="/images/instagram/xig/homepage/screenshots/screenshot2-2x.png?__d=www"
+                    />
+                    <img
+                        alt=""
+                        class="x972fbf xcfux6l x1qhh985 xm0m39n xk390pu xns55qn xu96u03 xdj266r x11i5rnm xat24cr x1mh8g0r xg01cxk xexx8yu x4uap5 x18d9i69 xkhd6sd x10l6tqk x13vifvy x11njtxf xlshs6z xqyf9gi"
+                        src="/images/instagram/xig/homepage/screenshots/screenshot3-2x.png?__d=www"
+                    />
+                    <img
+                        alt=""
+                        class="x972fbf xcfux6l x1qhh985 xm0m39n xk390pu xns55qn xu96u03 xdj266r x11i5rnm xat24cr x1mh8g0r xg01cxk xexx8yu x4uap5 x18d9i69 xkhd6sd x10l6tqk x13vifvy x11njtxf xlshs6z xqyf9gi"
+                        src="/images/instagram/xig/homepage/screenshots/screenshot4-2x.png?__d=www"
+                    />
+                </div>
+            </div>
+
             <form action="" className='shadow-lg shadow-white flex flex-col gap-5 p-8'>
                 <div className=''>
                     <h1 className='text-center font-bold text-xl'>Logo</h1>
