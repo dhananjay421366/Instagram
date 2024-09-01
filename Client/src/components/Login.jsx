@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { setAuthUser } from '@/redux/AuthSlice'
+import { selectedPost, setPost } from '@/redux/postSlice'
 
 
 export const Login = () => {
@@ -17,6 +18,7 @@ export const Login = () => {
         password: ""
     })
     const [loading, setLoading] = useState(false)
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const HandleSubmit = async (e) => {
@@ -33,6 +35,8 @@ export const Login = () => {
             })
             if (res.data.success) {
                 dispatch(setAuthUser(res.data))
+                dispatch(selectedPost(null))
+                dispatch(setPost([]))
                 navigate("/home")
                 toast.success(res.data.message)
 

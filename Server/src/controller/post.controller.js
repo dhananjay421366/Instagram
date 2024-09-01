@@ -101,7 +101,7 @@ const disLikePost = asyncHandler(async (req, res) => {
 // add comment done
 const addComment = asyncHandler(async (req, res) => {
   const postId = req.params.id;
-  const commentKarneWalaUserId = req.user._id;
+  const commentKarneWalaUserId = req.user?._id;
   const { content } = req.body;
   const post = await Post.findById(postId);
   if (!content) {
@@ -114,10 +114,13 @@ const addComment = asyncHandler(async (req, res) => {
   });
   await comment.populate({
     path: "commentBy",
-    select: "username,profilePicture",
+    select: "username profilePicture",
   });
-  console.log(post);
+
   post.comments.push(comment._id);
+  post.comments.push()
+  console.log(comment);
+  // post.comments.push();
   await post.save();
   // implement socket io for real time notification
   res
