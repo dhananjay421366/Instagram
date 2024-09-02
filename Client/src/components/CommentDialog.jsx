@@ -28,9 +28,9 @@ import axios from "axios";
 export const CommentDialog = ({ open, setOpen }) => {
     const [content, setText] = useState("")
     const { selectedPost, posts } = useSelector((store) => store.post);
-    const [comment, setComment] = useState([]);
+    const [comments, setComments] = useState(selectedPost?.comments || []);
     const dispatch = useDispatch();
-    console.log(selectedPost);
+    // console.log(selectedPost);
     const changeEventHandler = (e) => {
         const inputText = e.target.value;
         if (inputText.trim()) {
@@ -40,29 +40,51 @@ export const CommentDialog = ({ open, setOpen }) => {
         }
     };
 
-    const sendMessageHandler = async () => {
+    // const sendMessageHandler = async () => {
 
+    //     try {
+    //         const res = await axios.post(`/api/v1/posts/${selectedPost?._id}/addcomment`, { content }, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             withCredentials: true
+    //         });
+    //         console.log("this is an res of comment", res);
+
+    //         if (res.data.success) {
+    //             const updatedCommentData = [...comments, res.data.comment];
+    //             setComment(updatedCommentData);
+
+    //             const updatedPostData = posts.map(p =>
+    //                 p._id === selectedPost._id ? { ...p, comments: updatedCommentData } : p
+    //             );
+    //             dispatch(setPost(updatedPostData));
+    //             toast.success(res.data.message);
+    //             setText("");
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+    const commentHandler = async () => {
         try {
-            const res = await axios.post(`/api/v1/posts/${selectedPost?._id}/addcomment`, { content }, {
+            const res = await axios.post(`/api/v1/posts/${selectedPost._id}/addcomment`, { content }, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 withCredentials: true
-            });
-
+            })
             if (res.data.success) {
-                const updatedCommentData = [...comment, res.data.comment];
-                setComment(updatedCommentData);
-
-                const updatedPostData = posts.map(p =>
-                    p._id === selectedPost._id ? { ...p, comments: updatedCommentData } : p
-                );
-                dispatch(setPost(updatedPostData));
-                toast.success(res.data.message);
-                setText("");
+                const updatedCommentData = [...comments, res.data.comment]
+                setComments(updatedCommentData)
+                const updatePostData = posts.map((p) => p._id === selectedPost._id ? { ...p, comments: updatedCommentData } :
+                    p
+                )
+                dispatch(setPost(updatePostData))
+                toast.success(res.data.message)
             }
         } catch (error) {
-            console.log(error);
+            toast.error(error.res.data.message)
         }
     }
 
@@ -118,7 +140,7 @@ export const CommentDialog = ({ open, setOpen }) => {
                             <hr />
                             <div className="flex-1  overflow-y-auto max-h-96 p-4">
                                 {/* All comments */}
-                                {selectedPost?.comments.map((comment) => (
+                                {comments?.map((comment) => (
                                     <Comment key={comment?._id} comment={comment} />
                                 ))}
                             </div>
@@ -133,7 +155,7 @@ export const CommentDialog = ({ open, setOpen }) => {
                                     />
                                     <Button
                                         disabled={!content.trim()}
-                                        onClick={sendMessageHandler}
+                                        onClick={commentHandler}
                                         variant="outline"
                                     >
                                         Send

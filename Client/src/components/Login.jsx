@@ -23,7 +23,7 @@ export const Login = () => {
     const dispatch = useDispatch()
     const HandleSubmit = async (e) => {
         e.preventDefault()
-        console.log(form);
+        // console.log(form);
         try {
             console.log(form)
             setLoading(true)

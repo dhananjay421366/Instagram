@@ -17,6 +17,7 @@ import { selectedPost, setPost } from '@/redux/postSlice'
 export const Post = ({ post }) => {
   const [content, setText] = useState("")
   const [open, setOpen] = useState(false)
+  console.log(post);
 
   const { posts } = useSelector((store) => store.post)
   const { user } = useSelector((store) => store.auth)
@@ -64,7 +65,12 @@ export const Post = ({ post }) => {
         setPostlike(updatedLike)
         setLiked(!liked)
         toast.success(res.data.message)
-const commentHandler = async () => {
+      }
+    } catch (error) {
+      toast.error(error.res.data.message)
+    }
+  }
+  const commentHandler = async () => {
     try {
       const res = await axios.post(`/api/v1/posts/${post._id}/addcomment`, { content }, {
         headers: {
@@ -85,13 +91,6 @@ const commentHandler = async () => {
       toast.error(error.res.data.message)
     }
   }
-      }
-    } catch (error) {
-      toast.error(error.res.data.message)
-    }
-  }
-
-  
   return (
     <>
       <div className='my-8 w-full max-w-sm mx-auto'>

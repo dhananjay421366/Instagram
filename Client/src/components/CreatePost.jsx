@@ -21,7 +21,7 @@ export const CreatePost = ({ open, setOpen }) => {
   const { posts } = useSelector((store) => store.post)
 
 
-  console.log(user);
+  // console.log(user);
 
 
   const imageRef = useRef();
@@ -56,7 +56,7 @@ export const CreatePost = ({ open, setOpen }) => {
         dispatch(setPost([...posts, response.data.data]))
 
       }
-      console.log("display data on screen", response.data.data);
+      // console.log("display data on screen", response.data.data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
       console.error(error);

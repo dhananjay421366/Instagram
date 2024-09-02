@@ -117,10 +117,7 @@ const addComment = asyncHandler(async (req, res) => {
     select: "username profilePicture",
   });
 
-  post.comments.push(comment._id);
-  post.comments.push()
-  console.log(comment);
-  // post.comments.push();
+  post.comments.push(comment?._id);
   await post.save();
   // implement socket io for real time notification
   res
