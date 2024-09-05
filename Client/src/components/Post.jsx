@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Bookmark, MessageCircle, MoreHorizontal, Send } from 'lucide-react'
@@ -17,10 +17,12 @@ import { selectedPost, setPost } from '@/redux/postSlice'
 export const Post = ({ post }) => {
   const [content, setText] = useState("")
   const [open, setOpen] = useState(false)
-  console.log(post);
+  // console.log(post);
 
   const { posts } = useSelector((store) => store.post)
   const { user } = useSelector((store) => store.auth)
+  console.log(user);
+  // console.log(post.author._id);
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -91,6 +93,11 @@ export const Post = ({ post }) => {
       toast.error(error.res.data.message)
     }
   }
+  useEffect(() => {
+    if (liked) {
+      setLiked(post.likes)
+    }
+  })
   return (
     <>
       <div className='my-8 w-full max-w-sm mx-auto'>
@@ -106,7 +113,8 @@ export const Post = ({ post }) => {
               <h1>
                 {post.author.username.slice(0, 10)}
               </h1>
-              <Badge variant="secondary">Author</Badge>
+              {user?.data.user._id === post.author._id &&
+                <Badge variant="secondary">Author</Badge>}
             </div>
           </div>
           <Dialog>
@@ -162,11 +170,15 @@ export const Post = ({ post }) => {
           </span>
           {post.caption.slice(0, 15)}
         </p>
-        <span onClick={() => {
-          dispatch(selectedPost(post));
-          setOpen(true);
+        {
+          comments.length > 0 && (
+            <span onClick={() => {
+              dispatch(selectedPost(post));
+              setOpen(true);
 
-        }} className='cursor-pointer text-sm text-gray-400'>View all {comments.length}  comments</span>
+            }} className='cursor-pointer text-sm text-gray-400'>View all {comments.length}  comments</span>
+          )
+        }
         <CommentDialog open={open} setOpen={setOpen} />
 
         <div className='flex items-center justify-between'>

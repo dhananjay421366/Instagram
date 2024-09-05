@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,8 +28,14 @@ import axios from "axios";
 export const CommentDialog = ({ open, setOpen }) => {
     const [content, setText] = useState("")
     const { selectedPost, posts } = useSelector((store) => store.post);
-    const [comments, setComments] = useState(selectedPost?.comments || []);
+    const [comments, setComments] = useState([]);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedPost) {
+            setComments(selectedPost.comments)
+        }
+    })
     // console.log(selectedPost);
     const changeEventHandler = (e) => {
         const inputText = e.target.value;

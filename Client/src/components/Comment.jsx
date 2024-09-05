@@ -12,7 +12,7 @@ export const Comment = ({ comment }) => {
             <div className="my-2">
                 <div className='flex gap-3 items-center'>
                     <Avatar>
-                        <AvatarImage src={comment?.author?.profilePicture } />
+                        <AvatarImage src={comment?.author?.profilePicture} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <h1 className='font-bold text-sm'>                                            {comment?.username}
