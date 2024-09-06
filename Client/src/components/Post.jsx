@@ -124,10 +124,6 @@ export const Post = ({ post }) => {
             <DialogContent className="flex flex-col items-center text-sm text-center text-black">
               <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956] font-bold">Unfollow</Button>
               <Button variant='ghost' className="cursor-pointer w-fit">Add to favorites</Button>
-              {/* if (user?.data.user._id === post.author._id) {
-                <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956]">Delete</Button>
-              } */}
-
               {
                 user && user?.data.user._id === post.author._id && <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956]" onClick={delePostHandler}>Delete</Button>
               }
@@ -145,8 +141,7 @@ export const Post = ({ post }) => {
         <div className='flex items-center justify-between my-2'>
           <div className='flex items-center gap-3'>
 
-            {/* <FaHeart size={'24'} className='cursor-pointer text-red-600' /> */}
-            {/* <FaRegHeart size={'22px'} onClick={likeDislike} className='cursor-pointer hover:text-gray-600' /> */}
+           
             {
               liked ? <FaHeart size={'24'} onClick={likeDislike} className='cursor-pointer text-red-600' /> : <FaRegHeart size={'22px'} onClick={likeDislike} className='cursor-pointer hover:text-white-600' />
             }

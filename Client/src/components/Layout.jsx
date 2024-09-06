@@ -1,18 +1,14 @@
 import React from 'react'
 import { Navbar } from './Navbar'
-import { Outlet } from 'react-router-dom'
 import { LeftSideBar } from './LeftSideBar'
-import { Feed } from './Feed'
-import { RightSideBar } from './RightSideBar'
-
+import { Outlet } from 'react-router-dom'
 
 export const Layout = () => {
-  return (
-    <>
-      <Navbar />
-      <LeftSideBar />
-      <Outlet />
-     
-    </>
-  )
+    return (
+        <div>
+            <Navbar />
+            <LeftSideBar />
+            <Outlet />
+        </div>
+    )
 }
