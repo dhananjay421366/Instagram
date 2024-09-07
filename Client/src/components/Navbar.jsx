@@ -143,6 +143,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
+import { Button } from "./ui/button";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -175,6 +176,7 @@ export const Navbar = () => {
 
   return (
     <div className="flex justify-between sticky top-0  items-center">
+
       <div className="flex justify-between  sticky top-2    left-0 items-center ">
         <div class="x2lah0s p-4 sticky top-0 left-0 flex md:hidden x1to3lk4 x1n2onr6 xh8yej3">
           <div class="xxz18i5 x17qophe x10l6tqk x13vifvy x1lliihq x14vqqas x1kjsxda x1useyqa">
@@ -282,6 +284,9 @@ export const Navbar = () => {
           ))}
         </div>
       </div>
+      {
+        user ? "" : <Link to={'/login'}>  <Button className="mr-2">Login</Button></Link>
+      }
     </div>
   );
 };
