@@ -2,11 +2,13 @@ import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { SuggestedUser } from './SuggestedUser'
 
 export const RightSideBar = () => {
   const { user } = useSelector((store) => store.auth)
+  console.log(user)
   return (
-    <div className="w-fit my-10 pr-32">
+    <div className="w-fit my-10 pr-32  hidden md:block">
       <div className="flex  items-center gap-2">
         <Link to={`/profile/${user?.data.user._id}`}>
           <Avatar>
@@ -20,7 +22,7 @@ export const RightSideBar = () => {
         //  className='flex flex-col items-center  gap-3'
         >
           <h1 className='font-semibold text-sm'>
-            <Link to={""}>
+            <Link to={`/profile/${user?.data.user._id}`}>
               {user?.data.user.username}
             </Link>
           </h1>
@@ -29,6 +31,7 @@ export const RightSideBar = () => {
           </span>
         </div>
       </div>
+      <SuggestedUser/>
     </div>
   )
 }

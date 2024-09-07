@@ -86,7 +86,25 @@ export const CreatePost = ({ open, setOpen }) => {
             {
               imagePriview && (
                 <div className="w-full h-64 items-center justify-center">
-                  <img className='object-cover h-full w-full rounded-md' src={imagePriview} alt="preview_img" />
+                  {/* <img className='object-cover h-full w-full rounded-md' src={imagePriview} alt="preview_img" /> */}
+                  {imagePriview ? (
+                    imagePriview.match(/\.(jpeg|jpg|gif|png|svg)$/i) ? (
+                      <img
+                        className='rounded-sm my-2 w-full aspect-square object-cover'
+                        src={imagePriview}
+                        alt="post_img"
+                      />
+                    ) : (
+                      <iframe
+                        className='rounded-sm my-2 w-full aspect-square'
+                        src={imagePriview}
+                        title="content_frame"
+                        frameBorder="0"
+                        allowFullScreen
+                        allow='autoPlay'
+                      />
+                    )
+                  ) : null}
                 </div>
               )
             }

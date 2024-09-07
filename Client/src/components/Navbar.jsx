@@ -97,10 +97,10 @@ export const Navbar = () => {
           </div>
         </div>
         <div className="mr-3">
-          <Input
-            className="md:hidden bg-black text-white  outline-none  mr-4 "
+          {/* <Input
+            className="md:flex   hidden bg-black text-white  outline-none  mr-4 "
             placeholder="search here"
-          />
+          /> */}
         </div>
       </div>
     </>
