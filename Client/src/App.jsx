@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux'
 import ProtectedRoute from './components/protectedRoutes'
 import { CreatePost } from './components/CreatePost'
 import { NoLoginUser } from './components/NoLoginUser'
+import Reels from './components/Reels'
+
 
 function App() {
 
@@ -33,6 +35,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
       </Route>
     )
   )
