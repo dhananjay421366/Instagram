@@ -9,7 +9,7 @@ export const Home = () => {
   getAllPost()
   return (
     <>
-      <div className=' ml-12 flex justify-between'>
+      <div className='  flex justify-between'>
         <div className="flex-grow ">
           <Feed />
           <Outlet />

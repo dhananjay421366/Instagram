@@ -1,4 +1,3 @@
-// src/components/ShortsPage.js
 import React, { useEffect, useRef, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { MdComment, MdShare } from 'react-icons/md';
@@ -6,9 +5,9 @@ import { useSelector } from 'react-redux';
 
 const Reels = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [shuffledPosts, setShuffledPosts] = useState([]);
     const videoRefs = useRef([]);
-    const { posts } = useSelector((store) => store.post)
-    console.log(posts)
+    const { posts } = useSelector((store) => store.post);
 
     const handleScroll = (e) => {
         const newIndex = Math.round(e.target.scrollTop / window.innerHeight);
@@ -18,6 +17,12 @@ const Reels = () => {
     const handleVideoClick = (index) => {
         setCurrentIndex(index);
     };
+
+    useEffect(() => {
+        // Shuffle posts when the component mounts
+        const shuffled = [...posts].sort(() => Math.random() - 0.5);
+        setShuffledPosts(shuffled);
+    }, [posts]);
 
     useEffect(() => {
         const currentVideo = videoRefs.current[currentIndex];
@@ -33,29 +38,23 @@ const Reels = () => {
     }, [currentIndex]);
 
     return (
-        <div className="relative overflow-hidden h-screen bg-black">
-        <div className="flex flex-col h-full overflow-y-scroll snap-y snap-mandatory" onScroll={handleScroll}>
-            {posts.map((video, index) => (
-                <div key={index} className="snap-start h-screen flex flex-col items-center justify-center">
-                    <video
-                        ref={(el) => (videoRefs.current[index] = el)}
-                        className="w-full h-full object-cover"
-                        src={video.image}
-                        loop
-                    />
-                    <div className="absolute bottom-4 w-full flex justify-between px-6 text-white">
-                        <div className="flex flex-col">
-                            <button className="text-3xl mb-2"><FaHeart /></button>
-                            <button className="text-3xl"><MdComment /></button>
+        <div className="flex justify-center items-center">
+            <div className="py-10 lg:ml-64 overflow-hidden h-screen bg-black">
+                <div className="flex flex-col h-full overflow-y-scroll snap-y snap-mandatory" onScroll={handleScroll}>
+                    {shuffledPosts.map((video, index) => (
+                        <div key={index} className="snap-start h-screen flex flex-col items-center justify-center">
+                            <video
+                                ref={(el) => (videoRefs.current[index] = el)}
+                                className="w-full h-full object-cover border-b-2"
+                                src={video.image}
+                                loop
+                                onClick={() => handleVideoClick(index)}
+                            />
                         </div>
-                        <div className="flex flex-col">
-                            <button className="text-3xl mb-2"><MdShare /></button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
-            ))}
+            </div>
         </div>
-    </div>
     );
 };
 

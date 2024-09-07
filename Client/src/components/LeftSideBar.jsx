@@ -81,6 +81,10 @@ export const LeftSideBar = () => {
       logoutHandle();
     } else if (textType == "Create") {
       setOpen(true)
+    } else if (textType == "Shorts") {
+      navigate("/reels")
+    }else if (textType == "Home"){
+      navigate("/home")
     }
   };
   let username = `${user?.data.user.username}`
@@ -122,6 +126,10 @@ export const LeftSideBar = () => {
       ),
       text: user ? `${completedUsername}` : "Profile",
     },
+    {
+      icon: <FontAwesomeIcon icon={faPlay} size="2x" />,
+      text: "Shorts",
+    },
   ];
   return (
     <>
@@ -156,11 +164,7 @@ export const LeftSideBar = () => {
                     dir="auto"
                     className="line-height:var(--base-line-clamp-line-height);--base-line-clamp-line-height:20px"
                   >
-                    <Link to={"/reels"}>
-                      <span class="x1lliihq x193iq5w x6ikm8r x10wlt62 flex justify-center items-center gap-3 ml-2 xlyipyv xuxw1ft">
-                        <FontAwesomeIcon icon={faPlay} size="2x" />Short
-                      </span>
-                    </Link>
+
                   </span>
                 </div>
               </div>
@@ -170,56 +174,6 @@ export const LeftSideBar = () => {
 
           {/* Second main div for menu button */}
           <div className="x9f619 block md:flex items-center w-[210px] hover:bg-gray-900 text-white gap-3 md:px-3 cursor-pointer rounded-lg md:p-3 x3nfvp2 xr9ek0c xjpr12u xo237n4 x6pnmvc x7nr27j x12dmmrz xz9dl7a xn6708d xsag5q8 x1ye3gou x80pfx3 x159b3zp x1dn74xm xif99yt x172qv1o x10djquj x1lhsz42 xzauu7c xdoji71 x1dejxi8 x9k3k5o xs3sg5q x11hdxyr x12ldp4w x1wj20lx x1lq5wgf xgqcy7u x30kzoy x9jhf4c">
-            {/* <div className="hidden md:flex">
-              <div class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1">
-                <div class="x9f619 xxk0z11 xii2z7h x11xpdln x19c4wfv xvy4d1p">
-                  <svg
-                    aria-label="Settings"
-                    class="x1lliihq x1n2onr6 x5n08af"
-                    fill="currentColor"
-                    height="24"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="24"
-                  >
-                    <title>Settings</title>
-                    <line
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      x1="3"
-                      x2="21"
-                      y1="4"
-                      y2="4"
-                    ></line>
-                    <line
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      x1="3"
-                      x2="21"
-                      y1="12"
-                      y2="12"
-                    ></line>
-                    <line
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      x1="3"
-                      x2="21"
-                      y1="20"
-                      y2="20"
-                    ></line>
-                  </svg>
-                </div>
-              </div>
-            </div> */}
             <div className="x6s0dn4 x9f619 xxk0z11 x6ikm8r xeq5yr9 x1swvt13 x1s85apg xzzcqpx">
               <DropdownMenu className="text-white translate-x-0 translate-y-0">
                 <DropdownMenuTrigger asChild>
