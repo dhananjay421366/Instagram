@@ -17,7 +17,6 @@ const Reels = () => {
     const handleVideoClick = (index) => {
         setCurrentIndex(index);
     };
-
     useEffect(() => {
         // Shuffle posts when the component mounts
         const shuffled = [...posts].sort(() => Math.random() - 0.5);
@@ -36,7 +35,6 @@ const Reels = () => {
             }
         };
     }, [currentIndex]);
-
     return (
         <div className="flex justify-center items-center">
             <div className="py-10 lg:ml-64 overflow-hidden h-screen bg-black">
