@@ -23,7 +23,7 @@ router.route("/register").post(
 );
 router.route("/login").post(login);
 router.route("/logout").get(verifyJWT, logout);
-router.route("/current-user-profile").get(verifyJWT, getProfile);
+router.route("/:id/profile").get(verifyJWT, getProfile);
 router.route("/change-password").post(verifyJWT, changePassword);
 router
   .route("/update-account")

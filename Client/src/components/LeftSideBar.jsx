@@ -54,18 +54,21 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 
 export const LeftSideBar = () => {
-  let response;
   const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
-  const dispatch = useDispatch()
-  const [open, setOpen] = useState(false)
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  let username = user ? user?.data.user.username : "Profile";
+  let completedUsername = username.slice(0, 10); // Limit username to 10 characters
+  let profileName = user ? `${completedUsername}` : "Profile"
+
   const logoutHandle = async () => {
     try {
       const response = await axios.get("/api/v1/users/logout", {
         withCredentials: true,
       });
       if (response.data.success) {
-        dispatch(setAuthUser(null))
+        dispatch(setAuthUser(null));
         navigate("/login");
         toast.success(response.data.message);
       }
@@ -79,17 +82,19 @@ export const LeftSideBar = () => {
   const sideBarHandler = (textType) => {
     if (textType === "Logout") {
       logoutHandle();
-    } else if (textType == "Create") {
-      setOpen(true)
-    } else if (textType == "Shorts") {
-      navigate("/reels")
-    }else if (textType == "Home"){
-      navigate("/home")
+    } else if (textType === "Create") {
+      setOpen(true);
+    } else if (textType === "Shorts") {
+      navigate("/reels");
+    } else if (textType === "Home") {
+      navigate("/home");
+    } else if (textType === profileName) {
+      navigate(`/profile/${user?.data.user._id}`); // Navigate to user's profile using username
     }
   };
-  let username = `${user?.data.user.username}`
-  // username only contain 10 letters
-  let completedUsername = username.slice(0, 10);
+
+
+
   const sidebarItems = [
     {
       icon: <Home />,
@@ -118,19 +123,21 @@ export const LeftSideBar = () => {
     {
       icon: (
         <Avatar className="w-6 h-6 text-black">
-          {/* profilePicture */}
-          <AvatarImage src={user ? `${user?.data.user.profilePicture}` : <AvatarFallback>CN</AvatarFallback>} alt={user?.data.user.username} />
-
+          <AvatarImage
+            src={user ? `${user.data.user.profilePicture}` : ""}
+            alt={user?.data.user.username}
+          />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ),
-      text: user ? `${completedUsername}` : "Profile",
+      text: profileName,
     },
     {
       icon: <FontAwesomeIcon icon={faPlay} size="2x" />,
       text: "Shorts",
     },
   ];
+
   return (
     <>
 

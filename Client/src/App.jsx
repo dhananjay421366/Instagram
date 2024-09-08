@@ -9,6 +9,7 @@ import ProtectedRoute from './components/protectedRoutes'
 import { CreatePost } from './components/CreatePost'
 import { NoLoginUser } from './components/NoLoginUser'
 import Reels from './components/Reels'
+import { Profile } from './components/Profile'
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           }
         />
         <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
+        <Route path="/profile/:userId" element={<Profile />} />
       </Route>
     )
   )
