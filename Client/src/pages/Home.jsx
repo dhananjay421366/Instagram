@@ -16,7 +16,7 @@ export const Home = () => {
           <Feed />
           <Outlet />
         </div>
-        <RightSideBar/>
+        <RightSideBar />
       </div>
     </>
 

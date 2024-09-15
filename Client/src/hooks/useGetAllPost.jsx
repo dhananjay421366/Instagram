@@ -15,9 +15,7 @@ const getAllPost = () => {
                     // console.log("this ia an all posts  message", res.data.message);
                     // console.log("this ia an all posts", res.data.data);
                     dispatch(setPost(res.data.data))
-                    console.log("this an gets all posts ", res.data.data);
-
-
+                    // console.log("this an gets all posts ", res.data.data);
                 }
             } catch (error) {
                 console.log(error.message);

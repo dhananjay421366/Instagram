@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 export const Posts = () => {
   const { posts } = useSelector((store) => store.post)
-  console.log(posts);
+  // console.log(posts);
   return (
     <>
       <div className="m-8">

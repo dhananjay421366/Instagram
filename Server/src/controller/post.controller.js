@@ -5,36 +5,70 @@ import { User } from "../model/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../model/post.model.js";
 import { Comment } from "../model/comment.model.js";
+import fs from "fs"; // file system
 
 // done
 const addNewPost = asyncHandler(async (req, res) => {
   const { caption } = req.body;
-  const image = req.files?.image[0]?.path;
+  const image = req.files?.image[0]; // Access the file directly
   const authorId = req.user?._id;
+
   if (!image) {
     throw new ApiError(404, "Image is required");
   }
-  // upload image on cloudinary
-  const uploadedImage = await uploadOnCloudinary(image);
-  if (!uploadedImage) {
-    throw new ApiError(404, "Error to uploading image file");
-  }
+
+  // Read the file and convert it to a Base64 string
+  const imageBuffer = await fs.promises.readFile(image.path);
+  const base64Image = `data:${image.mimetype};base64,${imageBuffer.toString("base64")}`;
+
+  // Save the post to MongoDB with the Base64 image string
   const post = await Post.create({
     caption,
-    image: uploadedImage.url,
+    image: base64Image, // Store the image as a Base64 string
     author: authorId,
   });
+
   const user = await User.findById(authorId);
   if (user) {
     user.posts.push(post._id);
-    console.log(post);
     await user.save();
   }
-  await post.populate({ path: "author", select: "-password -refreshToken" }); // select an author and jump on author go on User model and select user details
+
+  await post.populate({ path: "author", select: "-password -refreshToken" });
+
   res
     .status(201)
     .json(new ApiResponse("200", post, "New post added successfully"));
 });
+// const addNewPost = asyncHandler(async (req, res) => {
+//   const { caption } = req.body;
+//   const image = req.files?.image[0]?.path;
+//   const authorId = req.user?._id;
+//   if (!image) {
+//     throw new ApiError(404, "Image is required");
+//   }
+//   // upload image on cloudinary
+//   const uploadedImage = await uploadOnCloudinary(image);
+//   if (!uploadedImage) {
+//     throw new ApiError(404, "Error to uploading image file");
+//   }
+//   const post = await Post.create({
+//     caption,
+//     image: uploadedImage.url,
+//     author: authorId,
+//   });
+//   const user = await User.findById(authorId);
+//   if (user) {
+//     user.posts.push(post._id);
+//     console.log(post);
+//     await user.save();
+//   }
+//   await post.populate({ path: "author", select: "-password -refreshToken" }); // select an author and jump on author go on User model and select user details
+//   res
+//     .status(201)
+//     .json(new ApiResponse("200", post, "New post added successfully"));
+// });
+
 // get all post done
 const getAllPost = asyncHandler(async (req, res) => {
   const post = await Post.find()
@@ -71,7 +105,7 @@ const getMyPost = asyncHandler(async (req, res) => {
 const likePost = asyncHandler(async (req, res) => {
   const likeKarneWakaUserId = req.user._id;
   const postId = req.params.id;
-  console.log(postId);
+  // console.log(postId);
   const post = await Post.findById(postId);
   if (!post) {
     throw new ApiError(404, "Post are not found");
@@ -145,12 +179,11 @@ const deletePost = asyncHandler(async (req, res) => {
   const postId = req.params.id;
   const userId = req.user._id;
   const post = await Post.findById(postId);
-  console.log(post);
   if (!post) {
     throw new ApiError(404, "Post are not found");
   }
   // check if the logged- in user is the owner of the post
-  console.log(post.author.toString(), "UserIs is ", userId);
+  // console.log(post.author.toString(), "UserIs is ", userId);
   if (post.author.toString() !== userId.toString()) {
     throw new ApiError(403, "Unauthorized ");
   }

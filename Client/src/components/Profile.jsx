@@ -10,7 +10,7 @@ export const Profile = () => {
     useGetUseProfile(userId)
 
     const { userProfile } = useSelector((store) => store.auth)
-    console.log("user profile", userProfile)
+    // console.log("user profile", userProfile)
     return (
         <>
             <div className="">
