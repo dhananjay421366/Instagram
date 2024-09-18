@@ -6,7 +6,7 @@ import { SuggestedUser } from './SuggestedUser'
 
 export const RightSideBar = () => {
   const { user } = useSelector((store) => store.auth)
-  console.log(user)
+  // console.log(user)
   return (
     <div className="w-fit my-10 pr-32  hidden md:block">
       <div className="flex  items-center gap-2">

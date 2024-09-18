@@ -1,1 +1,1 @@
-export const DB_NAME = "Instagram"
+export const DB_NAME = "insta"

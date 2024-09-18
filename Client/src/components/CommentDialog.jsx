@@ -104,7 +104,7 @@ export const CommentDialog = ({ open, setOpen }) => {
                     <div className="flex flex-1">
                         <div className="w-1/2">
                             <img
-                                className="w-full h-full object-cover rounded-l-lg"
+                                className="w-full h-[500px] object-cover rounded-l-lg"
                                 src={selectedPost?.image}
                             />
                         </div>

@@ -25,7 +25,7 @@ export const Login = () => {
         e.preventDefault()
         // console.log(form);
         try {
-            console.log(form)
+            // console.log(form)
             setLoading(true)
             const res = await axios.post('/api/v1/users/login', form, {
                 Headers: {
@@ -35,17 +35,19 @@ export const Login = () => {
             })
             if (res.data.success) {
                 dispatch(setAuthUser(res.data))
-                dispatch(selectedPost(null))
-                dispatch(setPost([]))
                 navigate("/home")
-                toast.success(res.data.message)
+                toast.success(res.data.message, {
+                    duration: 2000, // 2 seconds
+                })
 
 
 
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.res.data.message);
+            toast.error(error.res.data.message, {
+                duration: 2000, // 2 seconds
+            });
         } finally {
             setLoading(false);
             setFormData({

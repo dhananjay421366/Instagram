@@ -15,7 +15,7 @@ const useGetSuggestedUser = () => {
                     // console.log("this ia an all posts  message", res.data.message);
                     // console.log("this ia an all posts", res.data.data);
                     dispatch(setSuggestedUser(res.data.data))
-                    console.log("this an gets all suggested user ", res.data);
+                    // console.log("this an gets all suggested user ", res.data);
 
 
                 }

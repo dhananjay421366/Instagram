@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../model/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../model/post.model.js";
+import fs from "fs"; // file system
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -21,37 +22,81 @@ const generateAccessAndRefreshTokens = async (userId) => {
     );
   }
 };
+// const register = asyncHandler(async (req, res) => {
+//   // get user details from frontend
+//   const { email, username, password } = req.body;
+//   // console.log("email: ", email, "Password: ", password);
+
+//   // validation
+//   if ([email, username, password].some((field) => field?.trim() === "")) {
+//     throw new ApiError(400, "All fields are required");
+//   }
+//   //  check if user is already exists - username ,email
+//   const existedUser = await User.findOne({
+//     $or: [{ username }, { email }],
+//   });
+//   if (existedUser) {
+//     throw new ApiError(409, "User  with email or username already exists");
+//   }
+
+//   // log files
+//   // console.log(req.files);
+//   const profileFile = req.files?.profilePicture[0];
+
+//   // Read the file and convert it to a Base64 string
+//   const imageBuffer = await fs.promises.readFile(profileFile?.path);
+//   const base64Image = `data:${profilePicture?.mimetype};base64,${imageBuffer.toString("base64")}`;
+
+//   const user = await User.create({
+//     username,
+//     email,
+//     password,
+//     profilePicture: base64Image || "",
+//   });
+//   return res
+//     .status(201)
+//     .json(new ApiResponse("200", user, "User registered successfully"));
+// });
 const register = asyncHandler(async (req, res) => {
   // get user details from frontend
   const { email, username, password } = req.body;
-  console.log("email: ", email, "Password: ", password);
 
   // validation
   if ([email, username, password].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
   }
-  //  check if user is already exists - username ,email
+
+  // check if user already exists - username, email
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (existedUser) {
-    throw new ApiError(409, "User  with email or username already exists");
+    throw new ApiError(409, "User with email or username already exists");
   }
 
-  // log files
-  console.log(req.files);
-  const profileFile = req.files?.profilePicture[0]?.path;
-  console.log(profileFile);
+  // Check if profile picture is provided
+  const profileFile = req.files?.profilePicture ? req.files.profilePicture[0] : null;
+  
+  let base64Image = "";
 
-  // upload them cloudinary
-  const profileImg = await uploadOnCloudinary(profileFile);
+  if (profileFile) {
+    try {
+      // Read the file and convert it to a Base64 string
+      const imageBuffer = await fs.promises.readFile(profileFile.path);
+      base64Image = `data:${profileFile.mimetype};base64,${imageBuffer.toString("base64")}`;
+    } catch (err) {
+      throw new ApiError(500, "Failed to process profile picture");
+    }
+  }
 
+  // Create a new user with or without a profile picture
   const user = await User.create({
     username,
     email,
     password,
-    profilePicture: profileImg?.url || "",
+    profilePicture: base64Image || "",
   });
+
   return res
     .status(201)
     .json(new ApiResponse("200", user, "User registered successfully"));
@@ -128,6 +173,7 @@ const login = asyncHandler(async (req, res) => {
       )
     );
 });
+
 const logout = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
@@ -149,7 +195,7 @@ const logout = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User logged out successfully"));
+    .json(new ApiResponse(200, {}, `${req.user.username} logged out successfully`));
 });
 
 const getProfile = asyncHandler(async (req, res) => {
@@ -167,10 +213,9 @@ const editProfile = asyncHandler(async (req, res) => {
   if (!profilePictureLocalpath) {
     throw new ApiError(404, "Profile picture is required");
   }
-  const profilePicture = await uploadOnCloudinary(profilePictureLocalpath);
-  if (!profilePicture) {
-    throw new ApiError(400, "Error to uploading profile picture");
-  }
+  // Read the file and convert it to a Base64 string
+  const imageBuffer = await fs.promises.readFile(profilePictureLocalpath.path);
+  const base64Image = `data:${profilePictureLocalpath.mimetype};base64,${imageBuffer.toString("base64")}`;
 
   const updatedUser = await User.findByIdAndUpdate(
     req.user._id,
@@ -179,7 +224,7 @@ const editProfile = asyncHandler(async (req, res) => {
         username: username,
         email: email,
         Bio: Bio,
-        profilePicture: profilePicture.url,
+        profilePicture: profilePictureLocalpath,
       },
     },
     {
@@ -192,7 +237,41 @@ const editProfile = asyncHandler(async (req, res) => {
       new ApiResponse(200, updatedUser, "Account details updated successfully")
     );
 });
+// const editProfile = asyncHandler(async (req, res) => {
+//   const { username, email, Bio } = req.body;
+//   // check validation
+//   if ([username, email, Bio].some((field) => field?.trim() == "")) {
+//     throw new ApiError(400, "All fields are required");
+//   }
+//   let profilePictureLocalpath = req.file?.path;
+//   if (!profilePictureLocalpath) {
+//     throw new ApiError(404, "Profile picture is required");
+//   }
+//   const profilePicture = await uploadOnCloudinary(profilePictureLocalpath);
+//   if (!profilePicture) {
+//     throw new ApiError(400, "Error to uploading profile picture");
+//   }
 
+//   const updatedUser = await User.findByIdAndUpdate(
+//     req.user._id,
+//     {
+//       $set: {
+//         username: username,
+//         email: email,
+//         Bio: Bio,
+//         profilePicture: profilePicture.url,
+//       },
+//     },
+//     {
+//       new: true,
+//     }
+//   );
+//   return res
+//     .status(200)
+//     .json(
+//       new ApiResponse(200, updatedUser, "Account details updated successfully")
+//     );
+// });
 const changePassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 

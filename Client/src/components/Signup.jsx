@@ -29,12 +29,16 @@ export const Signup = () => {
             });
             if (res.data.success) {
                 navigate("/login")
-                toast.success(res.data.message);
+                toast.success(res.data.message,{
+                    duration: 2000, // 2 seconds
+                  });
             }
 
         } catch (error) {
             console.log(error);
-            toast.error(error.res.data.message)
+            toast.error(error.res.data.message,{
+                duration: 2000, // 2 seconds
+              })
         } finally {
             setLoading(false);
             setFormData({
