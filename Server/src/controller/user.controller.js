@@ -102,6 +102,77 @@ const register = asyncHandler(async (req, res) => {
     .json(new ApiResponse("200", user, "User registered successfully"));
 });
 
+// const login = asyncHandler(async (req, res) => {
+//   // req body -> data
+//   // username or email
+//   // find the user
+//   // password check
+//   // access and refresh token
+//   // send cookies
+//   // response
+//   const { email, username, password } = req.body;
+//   // console.log(email, username, password);
+
+//   if (!username && !email) {
+//     throw new ApiError(400, "username or email is required");
+//   }
+//   let user = await User.findOne({
+//     $or: [{ username }, { email }],
+//   });
+
+//   if (!user) {
+//     throw new ApiError(404, "User does not exist");
+//   }
+//   const isPasswordValid = await user.isPasswordCorrect(password);
+//   if (!isPasswordValid) {
+//     throw new ApiError(401, "Invalid user credentials");
+//   }
+//   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+//     user._id
+//   );
+//   const populatedPosts = await Promise.all(
+//     user.posts.map(async (postId) => {
+//       const post = await Post.findById(postId);
+//       if (post && post.author.equals(user._id)) {
+//         return post;
+//       }
+//       return null;
+//     })
+//   );
+
+//   const loggedInUser = await User.findOne(user._id).select(
+//     "-password -refreshToken"
+//   );
+//   const options = {
+//     httpOnly: true,
+//     secure: true,
+//   };
+//   user = {
+//     _id: user._id,
+//     username: user.username,
+//     email: user.email,
+//     profilePicture: user.profilePicture,
+//     Bio: user.Bio,
+//     followers: user.followers,
+//     following: user.following,
+//     posts: populatedPosts,
+//   };
+//   return res
+//     .status(200)
+//     .cookie("accessToken", accessToken, options)
+//     .cookie("refreshToken", refreshToken, options)
+//     .json(
+//       new ApiResponse(
+//         200,
+//         {
+//           user,
+//           accessToken,
+//           refreshToken,
+//         },
+//         `Welcome back ${user.username}`
+//       )
+//     );
+// });
 const login = asyncHandler(async (req, res) => {
   // req body -> data
   // username or email
@@ -116,7 +187,7 @@ const login = asyncHandler(async (req, res) => {
   if (!username && !email) {
     throw new ApiError(400, "username or email is required");
   }
-  let user = await User.findOne({
+  const user = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -127,35 +198,18 @@ const login = asyncHandler(async (req, res) => {
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials");
   }
+
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
-  );
-  const populatedPosts = await Promise.all(
-    user.posts.map(async (postId) => {
-      const post = await Post.findById(postId);
-      if (post && post.author.equals(user._id)) {
-        return post;
-      }
-      return null;
-    })
   );
 
   const loggedInUser = await User.findOne(user._id).select(
     "-password -refreshToken"
   );
+
   const options = {
     httpOnly: true,
     secure: true,
-  };
-  user = {
-    _id: user._id,
-    username: user.username,
-    email: user.email,
-    profilePicture: user.profilePicture,
-    Bio: user.Bio,
-    followers: user.followers,
-    following: user.following,
-    posts: populatedPosts,
   };
   return res
     .status(200)
@@ -165,11 +219,11 @@ const login = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-          user,
+          user: loggedInUser,
           accessToken,
           refreshToken,
         },
-        `Welcome back ${user.username}`
+        "User loggedIn successfully"
       )
     );
 });
