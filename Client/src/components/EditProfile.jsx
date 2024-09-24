@@ -10,7 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { setAuthUser } from '@/redux/AuthSlice';
 import { readFileAsDataURI } from '@/lib/utils';
-
+// now every thing id done
 export const EditProfile = () => {
   const { user } = useSelector((store) => store.auth);
   const imageref = useRef();
