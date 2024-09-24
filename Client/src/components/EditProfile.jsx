@@ -9,6 +9,7 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { setAuthUser } from '@/redux/AuthSlice';
+import { readFileAsDataURI } from '@/lib/utils';
 
 export const EditProfile = () => {
   const { user } = useSelector((store) => store.auth);
@@ -26,14 +27,15 @@ export const EditProfile = () => {
   // Store the actual file for upload
   const [profilePictureFile, setProfilePictureFile] = useState(null);
 
-  const fileChangeHandler = (e) => {
-    const file = e.target.files?.[0];
+  const imageRef = useRef();
+  const fileChangeHandler = async (e) => {
+    const file = e.target.files?.[0]
     if (file) {
-      setProfilePictureFile(file); // Set the actual file for upload
-      setInput({ ...input, profilePhoto: URL.createObjectURL(file) }); // Preview the image
+      setProfilePictureFile(file)
     }
-  };
-
+    const dataURL = await readFileAsDataURI(file)
+    setProfilePictureFile(dataURL)
+  }
   const editProfileHandler = async () => {
     try {
       const formData = new FormData();
@@ -56,7 +58,7 @@ export const EditProfile = () => {
 
       if (response?.data?.success) {
         const updatedUser = response.data.data; // Expect the updated user from the backend
-
+        console.log(updatedUser)
         // Update Redux store with the new profile data
         const updatedUserData = {
           ...user,
@@ -64,13 +66,15 @@ export const EditProfile = () => {
             ...user.data,
             user: {
               ...user.data.user,
-              Bio: updatedUser.Bio,
-              profilePicture: updatedUser.profilePicture,
-              gender: updatedUser.gender,
+              Bio: response.data.data.Bio,
+              profilePicture: response.data.data.profilePicture,
+              gender: response.data.data.gender,
             },
           },
         };
+        // console.log(updatedUserData)
         dispatch(setAuthUser(updatedUserData));
+        // console.log(user)
         navigate(`/${user?.data?.user?._id}/profile`);
         toast.success(response.data.message);
       } else {
@@ -153,3 +157,6 @@ export const EditProfile = () => {
     </div>
   );
 };
+
+
+
