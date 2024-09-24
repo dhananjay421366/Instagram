@@ -35,6 +35,7 @@ const Reels = () => {
             }
         };
     }, [currentIndex]);
+    // const onlyVideos = shuffledPosts.startsWith("data:video/")
     return (
         <div className="flex justify-center items-center">
             <div className="py-10 lg:ml-64 overflow-hidden h-screen bg-black">

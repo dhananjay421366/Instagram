@@ -5,6 +5,8 @@ import { User } from "../model/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../model/post.model.js";
 import fs from "fs"; // file system
+import mongoose from "mongoose";
+import { removeFile } from "../utils/removeFileFromServer.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -22,41 +24,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
     );
   }
 };
-// const register = asyncHandler(async (req, res) => {
-//   // get user details from frontend
-//   const { email, username, password } = req.body;
-//   // console.log("email: ", email, "Password: ", password);
-
-//   // validation
-//   if ([email, username, password].some((field) => field?.trim() === "")) {
-//     throw new ApiError(400, "All fields are required");
-//   }
-//   //  check if user is already exists - username ,email
-//   const existedUser = await User.findOne({
-//     $or: [{ username }, { email }],
-//   });
-//   if (existedUser) {
-//     throw new ApiError(409, "User  with email or username already exists");
-//   }
-
-//   // log files
-//   // console.log(req.files);
-//   const profileFile = req.files?.profilePicture[0];
-
-//   // Read the file and convert it to a Base64 string
-//   const imageBuffer = await fs.promises.readFile(profileFile?.path);
-//   const base64Image = `data:${profilePicture?.mimetype};base64,${imageBuffer.toString("base64")}`;
-
-//   const user = await User.create({
-//     username,
-//     email,
-//     password,
-//     profilePicture: base64Image || "",
-//   });
-//   return res
-//     .status(201)
-//     .json(new ApiResponse("200", user, "User registered successfully"));
-// });
 const register = asyncHandler(async (req, res) => {
   // get user details from frontend
   const { email, username, password } = req.body;
@@ -75,8 +42,10 @@ const register = asyncHandler(async (req, res) => {
   }
 
   // Check if profile picture is provided
-  const profileFile = req.files?.profilePicture ? req.files.profilePicture[0] : null;
-  
+  const profileFile = req.files?.profilePicture
+    ? req.files.profilePicture[0]
+    : null;
+
   let base64Image = "";
 
   if (profileFile) {
@@ -96,83 +65,11 @@ const register = asyncHandler(async (req, res) => {
     password,
     profilePicture: base64Image || "",
   });
-
   return res
     .status(201)
     .json(new ApiResponse("200", user, "User registered successfully"));
 });
 
-// const login = asyncHandler(async (req, res) => {
-//   // req body -> data
-//   // username or email
-//   // find the user
-//   // password check
-//   // access and refresh token
-//   // send cookies
-//   // response
-//   const { email, username, password } = req.body;
-//   // console.log(email, username, password);
-
-//   if (!username && !email) {
-//     throw new ApiError(400, "username or email is required");
-//   }
-//   let user = await User.findOne({
-//     $or: [{ username }, { email }],
-//   });
-
-//   if (!user) {
-//     throw new ApiError(404, "User does not exist");
-//   }
-//   const isPasswordValid = await user.isPasswordCorrect(password);
-//   if (!isPasswordValid) {
-//     throw new ApiError(401, "Invalid user credentials");
-//   }
-//   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-//     user._id
-//   );
-//   const populatedPosts = await Promise.all(
-//     user.posts.map(async (postId) => {
-//       const post = await Post.findById(postId);
-//       if (post && post.author.equals(user._id)) {
-//         return post;
-//       }
-//       return null;
-//     })
-//   );
-
-//   const loggedInUser = await User.findOne(user._id).select(
-//     "-password -refreshToken"
-//   );
-//   const options = {
-//     httpOnly: true,
-//     secure: true,
-//   };
-//   user = {
-//     _id: user._id,
-//     username: user.username,
-//     email: user.email,
-//     profilePicture: user.profilePicture,
-//     Bio: user.Bio,
-//     followers: user.followers,
-//     following: user.following,
-//     posts: populatedPosts,
-//   };
-//   return res
-//     .status(200)
-//     .cookie("accessToken", accessToken, options)
-//     .cookie("refreshToken", refreshToken, options)
-//     .json(
-//       new ApiResponse(
-//         200,
-//         {
-//           user,
-//           accessToken,
-//           refreshToken,
-//         },
-//         `Welcome back ${user.username}`
-//       )
-//     );
-// });
 const login = asyncHandler(async (req, res) => {
   // req body -> data
   // username or email
@@ -249,83 +146,43 @@ const logout = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, `${req.user.username} logged out successfully`));
-});
-
-const getProfile = asyncHandler(async (req, res) => {
-  return res.json(
-    new ApiResponse(200, req.user, "User profile fetched successfully")
-  );
-});
-const editProfile = asyncHandler(async (req, res) => {
-  const { username, email, Bio } = req.body;
-  // check validation
-  if ([username, email, Bio].some((field) => field?.trim() == "")) {
-    throw new ApiError(400, "All fields are required");
-  }
-  let profilePictureLocalpath = req.file?.path;
-  if (!profilePictureLocalpath) {
-    throw new ApiError(404, "Profile picture is required");
-  }
-  // Read the file and convert it to a Base64 string
-  const imageBuffer = await fs.promises.readFile(profilePictureLocalpath.path);
-  const base64Image = `data:${profilePictureLocalpath.mimetype};base64,${imageBuffer.toString("base64")}`;
-
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $set: {
-        username: username,
-        email: email,
-        Bio: Bio,
-        profilePicture: profilePictureLocalpath,
-      },
-    },
-    {
-      new: true,
-    }
-  );
-  return res
-    .status(200)
     .json(
-      new ApiResponse(200, updatedUser, "Account details updated successfully")
+      new ApiResponse(200, {}, `${req.user.username} logged out successfully`)
     );
 });
-// const editProfile = asyncHandler(async (req, res) => {
-//   const { username, email, Bio } = req.body;
-//   // check validation
-//   if ([username, email, Bio].some((field) => field?.trim() == "")) {
-//     throw new ApiError(400, "All fields are required");
-//   }
-//   let profilePictureLocalpath = req.file?.path;
-//   if (!profilePictureLocalpath) {
-//     throw new ApiError(404, "Profile picture is required");
-//   }
-//   const profilePicture = await uploadOnCloudinary(profilePictureLocalpath);
-//   if (!profilePicture) {
-//     throw new ApiError(400, "Error to uploading profile picture");
-//   }
+const getProfile = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.params.id;
 
-//   const updatedUser = await User.findByIdAndUpdate(
-//     req.user._id,
-//     {
-//       $set: {
-//         username: username,
-//         email: email,
-//         Bio: Bio,
-//         profilePicture: profilePicture.url,
-//       },
-//     },
-//     {
-//       new: true,
-//     }
-//   );
-//   return res
-//     .status(200)
-//     .json(
-//       new ApiResponse(200, updatedUser, "Account details updated successfully")
-//     );
-// });
+    // Check if userId is valid
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res
+        .status(400)
+        .json(new ApiResponse(400, null, "Invalid User ID"));
+    }
+
+    // Find user by ID and populate the posts with specific fields (id and image) and bookmarks
+    let user = await User.findById(userId)
+      .populate({
+        path: "posts", // Populate the posts field
+        options: { sort: { createdAt: -1 } }, // Sort by createdAt descending
+      })
+      .populate("bookmarks"); // Populate the bookmarks
+
+    if (!user) {
+      return res.status(404).json(new ApiResponse(404, null, "User not found"));
+    }
+
+    return res.json(
+      new ApiResponse(200, user, "User profile fetched successfully")
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(new ApiResponse(500, null, "Server error"));
+  }
+});
+
+
 const changePassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
@@ -342,6 +199,47 @@ const changePassword = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+const editProfile = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Check if userId is valid
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res
+        .status(400)
+        .json(new ApiResponse(400, null, "Invalid User ID"));
+    }
+
+    let user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json(new ApiResponse(404, null, "User not found"));
+    }
+
+    const { Bio, gender } = req.body;
+    const profileFile = req.file; // Assuming multer is being used to handle file uploads
+
+    if (profileFile) {
+      // Handle file upload, convert to base64 or store in a cloud storage
+      const imageBuffer = await fs.promises.readFile(profileFile.path);
+      const base64Image = `data:${profileFile.mimetype};base64,${imageBuffer.toString("base64")}`;
+      user.profilePicture = base64Image;
+    }
+
+    // Only update fields that are provided
+    user.Bio = Bio || user.Bio;
+    user.gender = gender || user.gender;
+
+    await user.save();
+
+    return res.json(
+      new ApiResponse(200, user, "User profile updated successfully")
+    );
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(new ApiResponse(500, null, "Server error"));
+  }
 });
 
 const getSuggestedUsers = asyncHandler(async (req, res) => {

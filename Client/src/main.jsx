@@ -12,18 +12,6 @@ import { Provider } from 'react-redux'
 import store from './redux/store.js'
 import { PersistGate } from "redux-persist/integration/react";
 import persistStore from 'redux-persist/es/persistStore'
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={<Layout />}>
-//       <Route path="" element={<Home />} />
-//       <Route path="register" element={<Signup />} />
-
-//       <Route path="login" element={<Login />} />
-
-//     </Route>
-//   )
-// );
 let persistor = persistStore(store)
 
 createRoot(document.getElementById('root')).render(

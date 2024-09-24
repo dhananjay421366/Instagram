@@ -35,8 +35,8 @@ export const SuggestedUser = () => {
     <div className='my-10'>
       <div className="flex justify-between gap-2 items-center text-sm">
         <h1 className='font-semibold text-gray-500'>Suggested for you</h1>
-        <button 
-          className='font-semibold text-gray-500' 
+        <button
+          className='font-semibold text-gray-500'
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? 'Show Less' : 'See All'}
@@ -46,30 +46,30 @@ export const SuggestedUser = () => {
         displayedUsers.map((user) => (
           <div className="my-4" key={user?._id}>
             <div className="flex items-center justify-between ">
-            <div className="flex items-center   gap-2">
-            <Link to={`/profile/${user?._id}`}>
-                <Avatar>
-                  <AvatarImage
-                    src={user?.profilePicture}
-                    alt="profile_image"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </Link>
-              <div className='flex flex-col'>
-                <h1 className='font-semibold text-sm'>
-                  <Link to={`/profile/${user?._id}`}>
-                    {user?.username}
-                  </Link>
-                </h1>
-                <span className='text-sm'>
-                  {user?.Bio || 'No bio available'}
-                </span>
+              <div className="flex items-center   gap-2">
+                <Link to={`/${user?._id}/profile`}>
+                  <Avatar>
+                    <AvatarImage
+                      src={user?.profilePicture}
+                      alt="profile_image"
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Link>
+                <div className='flex flex-col'>
+                  <h1 className='font-semibold text-sm'>
+                    <Link to={`/${user?._id}/profile`}>
+                      {user?.username}
+                    </Link>
+                  </h1>
+                  <span className='text-sm'>
+                    {user?.Bio || 'No bio available'}
+                  </span>
+                </div>
               </div>
+              <span className='text-[#6aadda] text-xs font-bold cursor-pointer hover:text-[#3b9bdb]'>Follow</span>
             </div>
-              <span  className='text-[#6aadda] text-xs font-bold cursor-pointer hover:text-[#3b9bdb]'>Follow</span>
-            </div>
-          
+
           </div>
         ))
       }

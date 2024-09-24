@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux"
 
 const useGetUseProfile = (userID) => {
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -16,6 +16,7 @@ const useGetUseProfile = (userID) => {
                     // console.log("this ia an all posts  message", res.data.message);
                     // console.log("this ia an all posts", res.data.data);
                     dispatch(setUserProfile(res.data.data))
+                    console.log(res.data)
                     // console.log("this an gets all suggested user ", res.data);
 
 

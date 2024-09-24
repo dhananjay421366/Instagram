@@ -46,32 +46,6 @@ export const CommentDialog = ({ open, setOpen }) => {
         }
     };
 
-    // const sendMessageHandler = async () => {
-
-    //     try {
-    //         const res = await axios.post(`/api/v1/posts/${selectedPost?._id}/addcomment`, { content }, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             withCredentials: true
-    //         });
-    //         console.log("this is an res of comment", res);
-
-    //         if (res.data.success) {
-    //             const updatedCommentData = [...comments, res.data.comment];
-    //             setComment(updatedCommentData);
-
-    //             const updatedPostData = posts.map(p =>
-    //                 p._id === selectedPost._id ? { ...p, comments: updatedCommentData } : p
-    //             );
-    //             dispatch(setPost(updatedPostData));
-    //             toast.success(res.data.message);
-    //             setText("");
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
     const commentHandler = async () => {
         try {
             const res = await axios.post(`/api/v1/posts/${selectedPost._id}/addcomment`, { content }, {

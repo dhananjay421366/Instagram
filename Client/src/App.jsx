@@ -10,6 +10,7 @@ import { CreatePost } from './components/CreatePost'
 import { NoLoginUser } from './components/NoLoginUser'
 import Reels from './components/Reels'
 import { Profile } from './components/Profile'
+import { EditProfile } from './components/EditProfile'
 
 
 function App() {
@@ -33,11 +34,13 @@ function App() {
           path="/addpost"
           element={
             <ProtectedRoute>
+              <CreatePost />
             </ProtectedRoute>
           }
         />
         <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
-        <Route path="/profile/:userId" element={<Profile />} />
+        <Route path="/account/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+        <Route path="/:id/profile" element={<Profile />} />
       </Route>
     )
   )

@@ -29,8 +29,7 @@ export const Navbar = () => {
         </Avatar>
       ),
       text: user ? `${completedUsername}` : "Profile",
-      route: "/profile"
-    },
+      route: `${user?.data.user._id}/profile`    },
   ];
 
   const handleClick = (route) => {

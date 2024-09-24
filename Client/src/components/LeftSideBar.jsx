@@ -76,10 +76,11 @@ export const LeftSideBar = () => {
     } else if (textType === "Home") {
       navigate("/home");
     } else if (textType === profileName) {
-      navigate(`/profile/${user?.data?.user?._id}`);
+      navigate(`/${user?.data.user._id}/profile`);
     }
   };
 
+  console.log(user?.data)
   const sidebarItems = [
     {
       icon: <Home />,
@@ -109,8 +110,8 @@ export const LeftSideBar = () => {
       icon: (
         <Avatar className="w-6 h-6 text-black">
           <AvatarImage
-            src={user?.data?.user?.profilePicture || ""}
-            alt={user?.data?.user?.username || "Profile"}
+            src={user?.data.user.profilePicture || ""}
+            alt={user?.data.user.username || "Profile"}
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -160,7 +161,7 @@ export const LeftSideBar = () => {
           </div>
         </div>
         {/* Uncomment the line below if you have the CreatePost component */}
-         <CreatePost open={open} setOpen={setOpen} /> 
+        <CreatePost open={open} setOpen={setOpen} />
       </div>
     </>
   );
